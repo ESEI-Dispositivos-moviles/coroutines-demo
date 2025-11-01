@@ -31,7 +31,7 @@ class ArticlesAdapter : ListAdapter<Article, ArticlesAdapter.Holder>(DIFF) {
     class Holder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val title: TextView = itemView.findViewById(R.id.title)
         fun bind(a: Article) {
-            title.text = a.title
+            title.text = if (a.source.isNotBlank()) "${a.title} — ${a.source}" else a.title
         }
     }
 }

@@ -6,9 +6,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class NewsRepository(
-    private val api: NewsApi = NewsService.api,
+    private val api: NewsApi,
     private val io: CoroutineDispatcher = Dispatchers.IO
 ) {
+    suspend fun fetch(): List<Article> = fetchHeadlines()
+
     suspend fun fetchHeadlines(
         category: String = "technology",
         country: String = "us"
@@ -18,13 +20,11 @@ class NewsRepository(
             val msg = resp.message ?: "NewsAPI error: ${resp.code ?: "unknown"}"
             throw IllegalStateException(msg)
         }
-        val items = resp.articles.orEmpty()
-        items.mapIndexed { idx, a ->
-            Article(
-                id = a.url ?: "news-$idx",
-                title = a.title ?: "(untitled)",
-                source = a.source?.name ?: "Unknown"
-            )
+        resp.articles.orEmpty().mapIndexed { index, dto ->
+            val id = dto.source?.id ?: dto.url ?: "article-$index"
+            val title = dto.title ?: ""
+            val sourceName = dto.source?.name ?: ""
+            Article(id, title, sourceName)
         }
     }
 
