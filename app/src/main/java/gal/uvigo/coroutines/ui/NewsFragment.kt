@@ -31,7 +31,7 @@ class NewsFragment : Fragment(R.layout.fragment_news) {
         toolbar.inflateMenu(R.menu.menu_news) // create menu with a single Refresh item
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
-                R.id.action_refresh -> { vm.refresh(category = "technology", country = "us"); true }
+                R.id.action_refresh -> { vm.refresh(country = "us"); true }
                 else -> false
             }
         }
