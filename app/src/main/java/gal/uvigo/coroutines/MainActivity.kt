@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
             insets
         }
         // Allow network on main thread (demo only!)
-        // TODO 09. Delete this code and make network calls from background threads only.
+        // TODO 10. Delete this code and make network calls from background threads only.
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
     }

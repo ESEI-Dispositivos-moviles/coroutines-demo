@@ -23,14 +23,13 @@ class NewsViewModel(
     val error: LiveData<String?> = _error
 
     fun refresh(category: String = "technology", country: String = "us") {
-        // TODO 06. suspend function must be called from a coroutine. We can use launch to start a new coroutine.
-        // TODO 07. launch must be called from a CoroutineScope, so we create one tied to the ViewModel lifecycle.
+        // TODO 07. suspend function must be called from a coroutine. We can use launch to start a new coroutine.
+        // TODO 08. launch must be called from a CoroutineScope, so we create one tied to the ViewModel lifecycle.
         _loading.value = true
         _error.value = null
         try {
             // TODO 02. Need to make this call non-blocking by using coroutines.
             // TODO 03. We start by making the repository function a suspend function.
-            // TODO 08. Need to move this blocking call to a background dispatcher by using withContext.
             val items = repo.fetchHeadlines(category, country)
             _articles.value = items
         } catch (t: Throwable) {
@@ -39,5 +38,7 @@ class NewsViewModel(
             _loading.value = false
         }
     }
+
+    // TODO 09. We need to cancel the CoroutineScope when the ViewModel is cleared to avoid memory leaks.
 
 }
