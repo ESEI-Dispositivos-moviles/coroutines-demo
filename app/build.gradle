@@ -51,6 +51,9 @@ android {
 }
 
 dependencies {
+
+    // TODO 01. Add kotlinx-coroutines-core and kotlinx-coroutines-android to your version catalog (libs.versions.toml)
+
     implementation libs.androidx.core.ktx
     implementation libs.androidx.appcompat
     implementation libs.material

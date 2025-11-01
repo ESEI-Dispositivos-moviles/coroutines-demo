@@ -9,6 +9,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 object NewsService {
+    // TODO: Retrofit already supports suspend functions out of the box when using Kotlin.
+
     private val authInterceptor = Interceptor { chain ->
         val apiKey = BuildConfig.NEWSAPI_KEY
         val reqBuilder = chain.request().newBuilder()

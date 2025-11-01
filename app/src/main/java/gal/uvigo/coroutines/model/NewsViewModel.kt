@@ -22,14 +22,15 @@ class NewsViewModel(
     private val _error = MutableLiveData<String?>(null)
     val error: LiveData<String?> = _error
 
-    // Use an explicit scope so the file compiles even if the lifecycle KTX extension isn't resolved by the analyzer
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
-
-    // Synchronous refresh — blocks the main thread (UI will freeze). Demo only.
     fun refresh(category: String = "technology", country: String = "us") {
+        // TODO 06. suspend function must be called from a coroutine. We can use launch to start a new coroutine.
+        // TODO 07. launch must be called from a CoroutineScope, so we create one tied to the ViewModel lifecycle.
         _loading.value = true
         _error.value = null
         try {
+            // TODO 02. Need to make this call non-blocking by using coroutines.
+            // TODO 03. We start by making the repository function a suspend function.
+            // TODO 08. Need to move this blocking call to a background dispatcher by using withContext.
             val items = repo.fetchHeadlines(category, country)
             _articles.value = items
         } catch (t: Throwable) {
