@@ -3,13 +3,10 @@ package gal.uvigo.coroutines.model
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import gal.uvigo.coroutines.domain.Article
 import gal.uvigo.coroutines.network.NewsRepository
 import gal.uvigo.coroutines.network.NewsService
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlin.coroutines.cancellation.CancellationException
 
@@ -26,11 +23,10 @@ class NewsViewModel(
     private val _error = MutableLiveData<String?>(null)
     val error: LiveData<String?> = _error
 
-    // Use an explicit scope so the file compiles even if the lifecycle KTX extension isn't resolved by the analyzer
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
-
+    // TODO 01. Replace de CoroutineScope with viewModelScope
+    // Use the lifecycle-aware viewModelScope provided by androidx.lifecycle:viewmodel-ktx
     fun refresh(category: String = "technology", country: String = "us") {
-        scope.launch {
+        viewModelScope.launch {
             _loading.value = true
             _error.value = null
             try {
@@ -44,9 +40,6 @@ class NewsViewModel(
             }
         }
     }
-
-    override fun onCleared() {
-        scope.cancel()
-        super.onCleared()
-    }
+    // TODO 02. Remove onCleared override. Not needed anymore.
+    // No need to cancel viewModelScope manually; it is cancelled when the ViewModel is cleared.
 }
