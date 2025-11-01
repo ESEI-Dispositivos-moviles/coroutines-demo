@@ -46,5 +46,9 @@ dependencies {
     androidTestImplementation libs.androidx.espresso.core
     implementation(libs.moshi)
     implementation(libs.moshi.kotlin)
+    implementation(libs.retrofit)
+    implementation(libs.converter.moshi)
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
     ksp(libs.moshi.kotlin.codegen)
 }
