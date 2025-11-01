@@ -3,6 +3,7 @@ package gal.uvigo.coroutines.model
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import gal.uvigo.coroutines.domain.Article
 import gal.uvigo.coroutines.network.NewsRepository
 import gal.uvigo.coroutines.network.NewsService
@@ -29,6 +30,9 @@ class NewsViewModel(
     // Use an explicit scope so the file compiles even if the lifecycle KTX extension isn't resolved by the analyzer
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
+    // TODO 01. Replace de CoroutineScope with viewModelScope
+    // Use the lifecycle-aware viewModelScope provided by androidx.lifecycle:viewmodel-ktx
+
     fun refresh(category: String = "technology", country: String = "us") {
         scope.launch {
             _loading.value = true
@@ -44,6 +48,9 @@ class NewsViewModel(
             }
         }
     }
+
+    // TODO 02. Remove onCleared override. Not needed anymore.
+    // No need to cancel viewModelScope manually; it is cancelled when the ViewModel is cleared.
 
     override fun onCleared() {
         scope.cancel()
