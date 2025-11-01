@@ -1,27 +1,29 @@
 package gal.uvigo.coroutines.network
 
 import gal.uvigo.coroutines.domain.Article
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import retrofit2.Call
+import retrofit2.Response
+import java.io.IOException
 
-class NewsRepository(
-    private val api: NewsApi
-) {
+class NewsRepository {
 
-    suspend fun fetchHeadlines(
-        category: String = "technology",
-        country: String = "us"
-    ): List<Article> = withContext(Dispatchers.IO) {
-        val resp = api.topHeadlines(category = category, country = country)
-        if (resp.status != "ok") {
-            val msg = resp.message ?: "NewsAPI error: ${resp.code ?: "unknown"}"
-            throw IllegalStateException(msg)
-        }
-        resp.articles.orEmpty().mapIndexed { index, dto ->
-            val id = dto.source?.id ?: dto.url ?: "article-$index"
-            val title = dto.title ?: ""
-            val sourceName = dto.source?.name ?: ""
-            Article(id, title, sourceName)
+    // Blocking network call (demo only): executes Retrofit Call synchronously
+    fun fetchHeadlines(category: String, country: String): List<Article> {
+        val call: Call<NewsApiResponseDto> = NewsService.api.topHeadlinesCall(category = category, country = country)
+        val response: Response<NewsApiResponseDto> = call.execute()
+        if (response.isSuccessful) {
+            val dtoList = response.body()?.articles ?: emptyList()
+            // Map DTO to domain model safely
+            return dtoList.map { dto ->
+                Article(
+                    id = dto.url ?: "",
+                    title = dto.title ?: "(no title)",
+                    source = dto.source?.name ?: "(unknown)"
+                )
+            }
+        } else {
+            val err = response.errorBody()?.string()
+            throw IOException("HTTP ${response.code()} ${response.message()}${if (err != null) ": $err" else ""}")
         }
     }
 }

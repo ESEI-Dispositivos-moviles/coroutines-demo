@@ -1,5 +1,6 @@
 package gal.uvigo.coroutines.network
 
+import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -11,6 +12,14 @@ interface NewsApi {
         @Query("country") country: String = "us",
         @Query("pageSize") pageSize: Int = 20
     ): NewsApiResponseDto
+
+    // Synchronous variant for demos / blocking calls
+    @GET("v2/top-headlines")
+    fun topHeadlinesCall(
+        @Query("category") category: String = "technology",
+        @Query("country") country: String = "us",
+        @Query("pageSize") pageSize: Int = 20
+    ): Call<NewsApiResponseDto>
 
     // Optional: search endpoint
     @GET("v2/everything")
