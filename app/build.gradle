@@ -20,11 +20,18 @@ android {
         targetSdk 36
         versionCode 1
         versionName "1.0"
-        buildConfigField(
-                "String",
-                "NEWSAPI_KEY",
-                "\"${project.findProperty("NEWSAPI_KEY") ?: ""}\""
-        )
+        def newsKey = project.findProperty("NEWSAPI_KEY") ?: System.getenv("NEWSAPI_KEY")
+        if (!newsKey) {
+            def lp = rootProject.file("local.properties")
+            if (lp.exists()) {
+                def props = new Properties()
+                lp.withInputStream { stream -> props.load(stream) }
+                newsKey = props.getProperty("NEWSAPI_KEY", "")
+            } else {
+                newsKey = ""
+            }
+        }
+        buildConfigField("String", "NEWSAPI_KEY", "\"${newsKey}\"")
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
