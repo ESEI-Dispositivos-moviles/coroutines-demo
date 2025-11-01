@@ -22,6 +22,8 @@ class NewsViewModel(
     private val _error = MutableLiveData<String?>(null)
     val error: LiveData<String?> = _error
 
+    // TODO 08. launch must be called from a CoroutineScope, so we create one tied to the ViewModel lifecycle.
+
     fun refresh(category: String = "technology", country: String = "us") {
         // TODO 07. suspend function must be called from a coroutine. We can use launch to start a new coroutine.
         // TODO 08. launch must be called from a CoroutineScope, so we create one tied to the ViewModel lifecycle.
