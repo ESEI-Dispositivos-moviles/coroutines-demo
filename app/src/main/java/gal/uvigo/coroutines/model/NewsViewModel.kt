@@ -23,14 +23,18 @@ class NewsViewModel(
     private val _error = MutableLiveData<String?>(null)
     val error: LiveData<String?> = _error
 
-    // TODO 01. Replace de CoroutineScope with viewModelScope
-    // Use the lifecycle-aware viewModelScope provided by androidx.lifecycle:viewmodel-ktx
+    // GOAL. We need to carry out parallel network requests
     fun refresh(category: String = "technology", country: String = "us") {
+        // TODO 01. Define categories to fetch in parallel: category1 and category2
         viewModelScope.launch {
             _loading.value = true
             _error.value = null
             try {
+                // TODO 02. Launch multiple requests in parallel using async/await
+                // TODO 02.01 Use coroutine async to fetch different categories: category1 and category2
+                // TODO 02.02 Await both results
                 val items = repo.fetchHeadlines(category, country)
+                // TODO 03. Combine results from multiple requests
                 _articles.value = items
             } catch (t: Throwable) {
                 if (t is CancellationException) throw t
@@ -40,6 +44,4 @@ class NewsViewModel(
             }
         }
     }
-    // TODO 02. Remove onCleared override. Not needed anymore.
-    // No need to cancel viewModelScope manually; it is cancelled when the ViewModel is cleared.
 }
