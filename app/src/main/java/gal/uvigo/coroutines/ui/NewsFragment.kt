@@ -30,7 +30,10 @@ class NewsFragment : Fragment(R.layout.fragment_news) {
         toolbar.title = getString(R.string.app_name)
         toolbar.inflateMenu(R.menu.menu_news) // create menu with a single Refresh item
         toolbar.setOnMenuItemClickListener {
-            if (it.itemId == R.id.action_refresh) { vm.refresh(); true } else false
+            when (it.itemId) {
+                R.id.action_refresh -> { vm.refresh(category = "technology", country = "us"); true }
+                else -> false
+            }
         }
 
         // Recycler setup
